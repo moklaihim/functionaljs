@@ -209,12 +209,10 @@ const makeCSV2 = t =>
         t.map(x => x.reduce((a, b) => (a == " " ? b : a + "|" + b), " "))
     );
 
-//console.log(makeCSV2(myData));    
-
 const addLogging = fn => (...args) =>{
-    console.log(`entering ${fn.name}: ${args} ${JSON.stringify(args)}`);
+    console.log(`entering ${fn.name}: ${args}`);
     const valueToReturn = fn(...args);
-    console.log(`exiting ${fn.name}: ${valueToReturn}`);
+    console.log(`exiting ${fn.name}: result=${valueToReturn}`);
     return valueToReturn;
 }
 
@@ -230,7 +228,17 @@ const addLogging2 = fn => (...args) =>{
     }    
 }
 
+function subtract2(a, b){
+    //[a, b] = args;
+    console.log(`subtract ${a} - ${b}`);
+    b = changeSign(b);
+    return a+b;
+}
+
 function subtract(a, b){
+    if (b===0){
+        throw "subtract from 0";
+    }
     b = changeSign(b);
     return a+b;
 }
@@ -239,9 +247,6 @@ function changeSign(a){
     return -a;
 }
 
-subtract = addLogging(subtract);
-changeSign = addLogging(changeSign);
-//let x = subtract(7, 5);
 
 function temp(i, j, ...args){
     
@@ -249,4 +254,64 @@ function temp(i, j, ...args){
     console.log(subtract(...args));
 };
 
-temp(2, 1, 3, 4);
+
+const addLogging3 = (fn, logger = console.log) => (...args)=>{
+    logger(`entering ${fn.name}: ${args}`);
+    try{
+        const valueToReturn = fn(...args);
+        logger(`exiting ${fn.name}: ${valueToReturn}`);
+        return valueToReturn;
+    } catch (thrownError) {
+        logger(`exiting ${fn.name}: threw ${thrownError}`);
+        throw thrownError;
+    }
+}
+
+const winston = require("winston");
+const myLogger = t=>winston.log("debug", "Loggin by winston: %s", t);
+winston.level = "debug";
+
+
+dummy = {    
+    logger(x) {
+        return x++;
+    }
+};
+
+const perf_h = require('perf_hooks');
+const performance = perf_h.performance;
+
+const myPut = (text, name, tStart, tEnd)=>console.log(`${name} - ${text} ${tEnd - tStart} ms`);
+const myGet = ()=>performance.now();
+
+const addTiming = (fn, getTime = myGet, output = myPut) => (...args) => {
+    let tStart = performance.now();
+    try{
+        const valueToReturn = fn(...args);
+        output("normal exit", fn.name, tStart, getTime());
+        return valueToReturn;
+    } catch (thrownError) {
+        output("exception thrown", fn.name, tStart, getTime());
+    }
+};
+
+subtract = addTiming(subtract);
+
+// let x = subtract(7, 5);
+// let y = subtract(4, 0);
+
+function fib(n){    
+    if(n==0){
+        return 0;
+    } else if(n==1){
+        return 1;
+    } else {
+        return fib(n-2) + fib(n-1);
+    }
+}
+
+const testFib = n=>fib(n);
+fib2 = addTiming(fib);
+fib2(45);
+addTiming(fib)(45);
+addTiming(testFib)(45);
