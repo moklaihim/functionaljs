@@ -310,8 +310,28 @@ function fib(n){
     }
 }
 
+const memoize = fn => {
+    let cache = {};
+    return x => {
+        return x in cache ? cache[x] : cache[x] = fn(x);
+    }
+}
+
 const testFib = n=>fib(n);
-fib2 = addTiming(fib);
-fib2(45);
-addTiming(fib)(45);
+const testMemoFib = memoize(n=>fib(n));
+fib = memoize(fib);
+
 addTiming(testFib)(45);
+addTiming(testFib)(40);
+addTiming(testFib)(35);
+addTiming(testFib)(45);
+addTiming(testFib)(40);
+addTiming(testFib)(35);
+addTiming(testFib)(45);
+addTiming(testFib)(40);
+addTiming(testFib)(35);
+
+// addTiming(testMemoFib)(45);
+// addTiming(testMemoFib)(45);
+// addTiming(testMemoFib)(40);
+// addTiming(testMemoFib)(35);

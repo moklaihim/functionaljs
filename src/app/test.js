@@ -1,3 +1,10 @@
+const memoize = fn => {
+    let cache = {};
+    return x => {
+        return x in cache ? cache[x] : cache[x] = fn(x);
+    }
+}
+
 const addLogging3 = (fn, logger = console.log) => (...args)=>{
     logger(`entering ${fn.name}: ${args}`);
     try{
