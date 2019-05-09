@@ -321,17 +321,50 @@ const testFib = n=>fib(n);
 const testMemoFib = memoize(n=>fib(n));
 fib = memoize(fib);
 
-addTiming(testFib)(45);
-addTiming(testFib)(40);
-addTiming(testFib)(35);
-addTiming(testFib)(45);
-addTiming(testFib)(40);
-addTiming(testFib)(35);
-addTiming(testFib)(45);
-addTiming(testFib)(40);
-addTiming(testFib)(35);
+// addTiming(testFib)(45);
+// addTiming(testFib)(40);
+// addTiming(testFib)(35);
+// addTiming(testFib)(45);
+// addTiming(testFib)(40);
+// addTiming(testFib)(35);
+// addTiming(testFib)(45);
+// addTiming(testFib)(40);
+// addTiming(testFib)(35);
 
 // addTiming(testMemoFib)(45);
 // addTiming(testMemoFib)(45);
 // addTiming(testMemoFib)(40);
 // addTiming(testMemoFib)(35);
+
+function isSomethingTrue(x){
+    return x;
+}
+
+const not = fn => {
+    return (...args) =>{
+        return !fn(...args);
+    };
+};
+
+const not2 = fn => {    
+        return (...args)=>args[0];
+};
+
+const notted = not( (x)=>x>5 )
+
+// console.log(isSomethingTrue(2>1));
+// console.log(isSomethingTrue(2>5));
+// console.log(isSomethingTrue(notted(6)));
+
+const invert = fn => (...args) => -fn(...args);
+const spanishComparision = (a, b)=>a.localeCompare(b, "es");
+
+var palabras = ["ñandú", "oasis", "mano", "natural", "mítico", "musical"];
+// console.log(palabras.sort(spanishComparision));
+// console.log(palabras.sort(invert(spanishComparision)));
+
+const binaryOp2 = op => new Function("x", "y", `return x ${op} y;`);
+const binaryLeftOp = (x, op) => (y) => binaryOp2(op)(x,y);
+const isNegative1 = binaryLeftOp(0, ">");
+console.log(isNegative1);
+console.log(isNegative1(-3));
