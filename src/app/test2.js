@@ -366,5 +366,41 @@ var palabras = ["ñandú", "oasis", "mano", "natural", "mítico", "musical"];
 const binaryOp2 = op => new Function("x", "y", `return x ${op} y;`);
 const binaryLeftOp = (x, op) => (y) => binaryOp2(op)(x,y);
 const isNegative1 = binaryLeftOp(0, ">");
-console.log(isNegative1);
-console.log(isNegative1(-3));
+// console.log(isNegative1);
+// console.log(isNegative1(-3));
+
+const getField = attr => obj => obj[attr];
+
+const anObj = {
+    key1: "key value 1",
+    key2: "key value 2",
+    key3: "key value 3"
+};
+
+const field1 = getField("key1");
+const field2 = getField("key2");
+
+// console.log(field1(anObj));
+// console.log(field2(anObj));
+
+const binder = fn=>(...args)=>fn.bind(...args)();
+
+
+const someArrTest = [1,2,3,4,5];
+
+const mySome = binder(Array.prototype.some);
+console.log(mySome(someArrTest, ele=>ele>2));
+
+const name = "functional";
+const map = binder(Array.prototype.map);
+const toUpperCase = binder(String.prototype.toLocaleUpperCase);
+
+console.log(map(name, toUpperCase));
+
+const toLocaleString = binder(Number.prototype.toLocaleString);
+
+const numbers = [2209.6, 124.56, 1048576];
+const strings = numbers.map(ele=>{    
+    return toLocaleString(ele);
+});
+console.log(strings);
