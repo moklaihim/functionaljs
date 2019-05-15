@@ -172,3 +172,21 @@ const squeakNTimes = thisManyTimes(squeak, 1);
 // squeakNTimes("A");
 // squeakNTimes("A");
 // squeakNTimes("A");
+
+const make3 = (a, b, c) => String(100 * a + 10 * b + c);
+
+const curryByBind = fn =>{
+    return fn.length === 0 ? fn() : p => {        
+        return curryByBind(fn.bind(null, p))
+    };
+}
+
+const curryByBind2 = (fn, len = fn.length) =>{
+    return len===0 ? fn() : p => {
+        return curryByBind2(fn.bind(null, p), len-1);
+    }
+};
+
+const sum2 = (...args) => {
+    return args.reduce((x, y)=>x+y, 0);
+};

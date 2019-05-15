@@ -1,12 +1,158 @@
-
-describe("custom find test", function(){
-    it("should match a standard find function", ()=>{
-        let a = [22, 9, 60, 12, 4, 56];
-        console.log(a.find((x)=>x>30));
-        console.log(myFind(a, (x)=>x>30));
-        expect(JSON.stringify(a.find((x)=>x>30))===JSON.stringify(myFind(a, x=>x>30))).toBe(true);
+describe("with curryByBind2", function(){
+    it("you fix arguments one by one", ()=>{
+        const suma = curryByBind2(sum2, 5);
+        const sumb = suma(1)(2)(3)(4)(5);
+        expect(sumb).toBe(sum2(1, 2, 3, 4, 5));
     });
-})
+
+    it("you can also work with arity 1", ()=>{
+        const suma = curryByBind2(sum2, 1);
+        const sumb = suma(111);
+        expect(sumb).toBe(sum2(111));
+    });
+});
+
+// describe("with curryByBind", function(){
+//     it("you fix arguments one by one", ()=>{
+//         const make3a = curryByBind(make3);
+//         const make3b = make3a(1)(2);
+//         const make3c = make3b(3);
+//         expect(make3c).toBe(make3(1, 2, 3));
+//     });
+// });
+
+// var fib = null;
+
+// beforeEach(()=>{
+//     console.log("beforeEach called...");
+//     fib = n =>{
+//         if (n==0){
+//             return 0;
+//         } else if (n===1){
+//             return 1;
+//         } else {
+//             return fib(n-2)+fib(n-1);
+//         }
+//     };
+// });
+
+// describe("the original fib", ()=>{    
+//     it("should produce correct results", ()=>{
+//         expect(fib(0)).toBe(0);
+//         expect(fib(1)).toBe(1);
+//         expect(fib(5)).toBe(5);
+//         expect(fib(8)).toBe(21);
+//         expect(fib(10)).toBe(55);
+//     });
+
+//     it("should repeat calculations", ()=>{
+//         spyOn(window, "fib").and.callThrough();
+//         expect(fib(6)).toBe(8);
+//         expect(fib).toHaveBeenCalledTimes(25);
+//     });
+// });
+
+// describe("the memoized fib", ()=>{    
+//     beforeEach(()=>{
+//         console.log("beforeEach in describe called...");
+//         fib = memoize(fib);
+//     });
+    
+//     it("should produce same results", ()=>{
+//         console.log("2.1");
+//         expect(fib(0)).toBe(0);
+//         expect(fib(1)).toBe(1);
+//         expect(fib(5)).toBe(5);
+//         expect(fib(8)).toBe(21);
+//         expect(fib(10)).toBe(55);
+//     });
+    
+//     it("shouldn't repeat calculations", ()=>{
+//         console.log("2.2");
+//         spyOn(window, "fib").and.callThrough();
+//         expect(fib(6)).toBe(8);
+//         expect(fib).toHaveBeenCalledTimes(11);
+
+//         expect(fib(5)).toBe(5);
+//         expect(fib(4)).toBe(3);
+//         expect(fib(3)).toBe(2);
+//         expect(fib).toHaveBeenCalledTimes(14);
+//     });
+// });
+
+
+// describe("after addLogging3()", function(){
+//     let dummy;
+
+//     beforeEach(()=>{
+//         dummy = {logger() {}};
+//         spyOn(dummy, "logger");
+//     });
+
+//     it("should call the provided logger", ()=>{
+//         let something = (a, b)=>`result=${a}:${b}`;
+//         something = addLogging3(something, dummy.logger);
+
+//         something(22, 9);
+//         expect(dummy.logger).toHaveBeenCalledTimes(2);
+//         expect(dummy.logger).toHaveBeenCalledWith("entering something: 22,9");
+//         expect(dummy.logger).toHaveBeenCalledWith("exiting something: result=22:9");
+//     });
+
+//     it("a throwing function should be reported", ()=>{
+//         let thrower = (a, b, c)=>{
+//             throw "CRASH!";
+//         };
+//         thrower = addLogging3(thrower, dummy.logger);
+
+//         try{
+//             thrower(1, 2, 3);
+//         } catch(e) {
+//             expect(dummy.logger).toHaveBeenCalledTimes(2);
+//             expect(dummy.logger).toHaveBeenCalledWith("entering thrower: 1,2,3");
+//             expect(dummy.logger).toHaveBeenCalledWith("exiting thrower: threw CRASH!");
+//         }
+//     });
+// });
+
+// describe("a logging function", function(){
+//     it("should log twice with well behaved functions", ()=>{
+//         let something = (a, b)=>`result=${a}:${b}`;
+//         something = addLogging(something);
+
+//         spyOnAllFunctions(window.console, "log");
+//         something(22, 9);
+//         expect(window.console.log).toHaveBeenCalledTimes(2);
+//         expect(window.console.log).toHaveBeenCalledWith("entering something: 22,9");
+//         expect(window.console.log).toHaveBeenCalledWith("exiting something: result=22:9");
+//     });
+
+//     it("should report a thrown execption", ()=>{
+//         let thrower = (a, b, c)=>{
+//             throw "CRASH!";
+//         };
+//         spyOn(window.console, "log");
+//         expect(thrower).toThrow();
+
+//         thrower = addLogging2(thrower);
+//         try{
+//             thrower(1, 2, 3);
+//         } catch (e) {
+//             expect(window.console.log).toHaveBeenCalledTimes(2);
+//             expect(window.console.log).toHaveBeenCalledWith("entering thrower: 1,2,3");
+//             expect(window.console.log).toHaveBeenCalledWith("exiting thrower: threw CRASH!");
+//         }
+//     });
+// });
+
+// describe("custom find test", function(){
+//     it("should match a standard find function", ()=>{
+//         let a = [22, 9, 60, 12, 4, 56];
+//         console.log(a.find((x)=>x>30));
+//         console.log(myFind(a, (x)=>x>30));
+//         expect(JSON.stringify(a.find((x)=>x>30))===JSON.stringify(myFind(a, x=>x>30))).toBe(true);
+//     });
+// })
 
 // describe("shuffleTest", function(){
 //     it("shouldn't change the array length", ()=>{

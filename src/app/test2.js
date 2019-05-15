@@ -301,6 +301,7 @@ subtract = addTiming(subtract);
 // let y = subtract(4, 0);
 
 function fib(n){    
+    console.log("fib called");
     if(n==0){
         return 0;
     } else if(n==1){
@@ -317,9 +318,10 @@ const memoize = fn => {
     }
 }
 
-const testFib = n=>fib(n);
-const testMemoFib = memoize(n=>fib(n));
-fib = memoize(fib);
+//const oriFib = fib;
+//const testFib = n=>fib(n);
+//const testMemoFib = memoize(n=>fib(n));
+//fib = memoize(fib);
 
 // addTiming(testFib)(45);
 // addTiming(testFib)(40);
@@ -346,11 +348,32 @@ const not = fn => {
     };
 };
 
+const negate = fn => {
+    return (...args) => {
+        return -fn(...args);
+    };
+};
+
+const negated = negate( (x, y)=>x+y );
+//console.log(negated(2, 3));
+
 const not2 = fn => {    
         return (...args)=>args[0];
 };
 
 const notted = not( (x)=>x>5 )
+
+const opposite = fn => {
+    return (...args) =>{
+        var result = fn(...args);
+        return typeof result === 'number' ? -result:!result;
+    };
+}
+
+const toOpposite = opposite((x, y)=>x+y);
+const toOpposite2 = opposite((x, y)=>x<y);
+// console.log(toOpposite(2, 5));
+// console.log(toOpposite2(7, 5));
 
 // console.log(isSomethingTrue(2>1));
 // console.log(isSomethingTrue(2>5));
@@ -389,13 +412,13 @@ const binder = fn=>(...args)=>fn.bind(...args)();
 const someArrTest = [1,2,3,4,5];
 
 const mySome = binder(Array.prototype.some);
-console.log(mySome(someArrTest, ele=>ele>2));
+//console.log(mySome(someArrTest, ele=>ele>2));
 
 const name = "functional";
 const map = binder(Array.prototype.map);
 const toUpperCase = binder(String.prototype.toLocaleUpperCase);
 
-console.log(map(name, toUpperCase));
+//console.log(map(name, toUpperCase));
 
 const toLocaleString = binder(Number.prototype.toLocaleString);
 
@@ -403,4 +426,91 @@ const numbers = [2209.6, 124.56, 1048576];
 const strings = numbers.map(ele=>{    
     return toLocaleString(ele);
 });
-console.log(strings);
+//console.log(strings);
+
+// console.log(fib(1));
+// console.log(fib(2));
+// console.log(fib(3));
+// console.log(fib(4));
+
+const randomizer = (...args) => { 
+    var last;
+    return () => {
+        current = args[Math.floor(Math.random() * args.length)];
+        current != last?current():"";
+        last=current;
+    };
+};
+
+function func1() {console.log("func1");}
+function func2() {console.log("func2");}
+function func3() {console.log("func3");}
+function func4() {console.log("func4");}
+function func5() {console.log("func5");}
+function func6() {console.log("func6");}
+function func7() {console.log("func7");}
+function func8() {console.log("func8");}
+function func9() {console.log("func9");}
+
+//randomCall = randomizer(func1, func2, func3, func4, func5, func6, func7, func8, func9);
+// randomCall();
+// randomCall();
+// randomCall();
+// randomCall();
+// randomCall();
+// randomCall();
+// randomCall();
+// randomCall();
+
+let sum = (x, y) => {
+    if (x !== undefined && y !== undefined) {
+        return x + y;
+    } else if (x  !== undefined && y == undefined) {
+        return z => sum(x, y);
+    } else {
+        return sum;
+    }
+}
+
+// console.log(sum());
+
+const make3 = (a, b, c) => String(100 * a + 10 * b + c);
+const step1 = make3.bind(null, 6);
+const step2 = step1.bind(null, 5);
+const step3 = step2.bind(null, 8);
+//console.log(make3, make3.length);
+// console.log(step1, step1.length);
+// console.log(step2, step2.length);
+// console.log(step3, step3.length);
+
+const curryByBind = fn =>{
+    return fn.length === 0 ? fn() : p => {        
+        return curryByBind(fn.bind(null, p))
+    };
+}
+
+const f1 = curryByBind(make3);
+const f2 = f1(6);
+const f3 = f2(5);
+const f4 = f3(8);
+
+// console.log(f1, f1.length);
+// console.log(f2, f2.length);
+// console.log(f3, f3.length);
+// console.log(f4);
+
+// console.log(f2(5)(2));
+// console.log(f2(5));
+
+const curryByBind2 = (fn, len = fn.length) =>{
+    return len===0 ? fn() : p => {
+        return curryByBind2(fn.bind(null, p), len-1);
+    }
+};
+
+const sum2 = (...args) => {
+    return args.reduce((x, y)=>x+y, 0);
+};
+
+curriedSum = curryByBind2(sum2, 4);
+console.log(curriedSum(1)(5)(3)(7));
