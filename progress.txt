@@ -1,1 +1,1 @@
-Currying with eval()
+Partial application

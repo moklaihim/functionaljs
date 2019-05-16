@@ -513,4 +513,24 @@ const sum2 = (...args) => {
 };
 
 curriedSum = curryByBind2(sum2, 4);
-console.log(curriedSum(1)(5)(3)(7));
+//console.log(curriedSum(1)(5)(3)(7));
+
+//console.log(range(2, 5));
+
+const curryByEval = (fn, len = fn.length) => {
+    return eval(`${range(0, len).map(i=>`x${i}`).join("=>")} => ${fn.name}(${range(0, len).map(i=>`x${i}`).join(",")})`);
+}
+const curryByEval2 = (fn, len = fn.length) => {
+    return eval(`${range(0, len).map(i=>`x${i}`).join("=>")} => (${fn.toString()})(${range(0, len).map(i=>`x${i}`).join(",")})`);
+}
+
+const m1 = curryByEval(make3);
+
+
+console.log(m1.toString());
+console.log(m1(2)(3)(4));
+
+console.log(curryByEval2(make3).toString());
+//console.log(m2(1)(2)(3));
+
+//console.log(`${range(0, 3).map(i=>`x${i}`).join("=>")}`);
