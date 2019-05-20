@@ -527,10 +527,45 @@ const curryByEval2 = (fn, len = fn.length) => {
 const m1 = curryByEval(make3);
 
 
-console.log(m1.toString());
-console.log(m1(2)(3)(4));
+// console.log(m1.toString());
+// console.log(m1(2)(3)(4));
 
-console.log(curryByEval2(make3).toString());
+// console.log(curryByEval2(make3).toString());
 //console.log(m2(1)(2)(3));
 
 //console.log(`${range(0, 3).map(i=>`x${i}`).join("=>")}`);
+
+function exceptionPromise(){
+    
+    return new Promise((resolve, reject)=>{
+        setTimeout(function(){
+            try{
+                console.log("in setTimeout");
+                // reject("error!");
+                throw new Error("error!");
+                //resolve("ok");
+            } catch (e) {
+                reject(e);
+            }            
+        }, 1500);
+    });
+}
+
+// try{
+//     exceptionPromise()
+//     .then((arg)=>{
+//         console.log("done", arg);
+//     })
+//     .catch((e)=>{
+//         console.log("catch error: ", e);
+//     });
+// } catch (e){
+//     console.log("try/catch: ", e);
+// }
+
+// console.log("after exceptionPromise");
+
+console.log(!!null);
+console.log(!null);
+console.log(null);
+console.log(!!'123');
