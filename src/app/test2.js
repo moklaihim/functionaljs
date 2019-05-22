@@ -565,7 +565,35 @@ function exceptionPromise(){
 
 // console.log("after exceptionPromise");
 
-console.log(!!null);
-console.log(!null);
-console.log(null);
-console.log(!!'123');
+// 
+
+const nonsense = (a, b, c, d, e) => `${a}/${b}/${c}/${d}/${e}`;
+
+console.log(nonsense(1, 2, 3, 4, 5));
+
+const partialByEval = (fn, ...args) =>{
+    console.log(args.length);
+    const rangeArgs = range(0, fn.length);
+    const leftList = rangeArgs
+        .map(v=>(args[v]===undefined?`X${v}`:null))
+        .filter(v=>!!v)
+        .join(",");
+    console.log(leftList);
+    const rightList = rangeArgs
+        .map(v=>(args[v]===undefined?`X${v}`:args[v]))
+        .join(",");
+    console.log(rightList);
+    return eval(`(${leftList})=>${fn.name}(${rightList})`);
+}
+
+const fix2and5 = partialByEval(
+    nonsense,
+    undefined,
+    22,
+    undefined,
+    undefined,
+    1960
+);
+
+console.log(fix2and5('a', 'b', 'c'));
+console.log(fix2and5.toString());

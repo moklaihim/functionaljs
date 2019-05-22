@@ -190,3 +190,22 @@ const curryByBind2 = (fn, len = fn.length) =>{
 const sum2 = (...args) => {
     return args.reduce((x, y)=>x+y, 0);
 };
+
+const nonsense = (a,b,c,d,e)=>`${a}/${b}/${c}/${d}/${e}`;
+
+const range = (start, stop) => new Array(stop-start).fill(0).map((v, i)=>start+i);
+
+const partialByEval = (fn, ...args) =>{
+    console.log(args.length);
+    const rangeArgs = range(0, fn.length);
+    const leftList = rangeArgs
+        .map(v=>(args[v]===undefined?`X${v}`:null))
+        .filter(v=>!!v)
+        .join(",");
+    console.log(leftList);
+    const rightList = rangeArgs
+        .map(v=>(args[v]===undefined?`X${v}`:args[v]))
+        .join(",");
+    console.log(rightList);
+    return eval(`(${leftList})=>${fn.name}(${rightList})`);
+}
