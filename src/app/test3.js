@@ -50,4 +50,20 @@ dict.alice = 34;
 dict.bob = 24;
 dict.chris = 62;
 
-console.log(Object.getOwnPropertyNames(dict).map(name=>name));
+//console.log(Object.getOwnPropertyNames(dict).map(name=>name));
+
+function asyncFunction(callback){
+    var result = ["a", "b", "c"];
+
+    setTimeout(callback.bind(null, result), 0);
+    
+    return;
+}
+
+function callbackFunction(arr){
+    console.log(arr);
+}
+
+console.log("calling asyncFunction");
+asyncFunction(callbackFunction);
+console.log("test");

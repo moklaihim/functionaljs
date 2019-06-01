@@ -478,21 +478,24 @@ const make3 = (a, b, c) => String(100 * a + 10 * b + c);
 const step1 = make3.bind(null, 6);
 const step2 = step1.bind(null, 5);
 const step3 = step2.bind(null, 8);
-//console.log(make3, make3.length);
+// console.log(make3, make3.length);
 // console.log(step1, step1.length);
 // console.log(step2, step2.length);
 // console.log(step3, step3.length);
+// console.log(step1(2, 3));
 
 const curryByBind = fn =>{
-    return fn.length === 0 ? fn() : p => {        
+    // console.log("curryByBind", fn.length);
+    return fn.length === 0 ? fn() : p => {
+        // console.log("returning");
         return curryByBind(fn.bind(null, p))
     };
 }
 
-const f1 = curryByBind(make3);
-const f2 = f1(6);
-const f3 = f2(5);
-const f4 = f3(8);
+// const f1 = curryByBind(make3);
+// const f2 = f1(6);
+// const f3 = f2(5);
+// const f4 = f3(8);
 
 // console.log(f1, f1.length);
 // console.log(f2, f2.length);
@@ -569,20 +572,20 @@ function exceptionPromise(){
 
 const nonsense = (a, b, c, d, e) => `${a}/${b}/${c}/${d}/${e}`;
 
-console.log(nonsense(1, 2, 3, 4, 5));
+// console.log(nonsense(1, 2, 3, 4, 5));
 
 const partialByEval = (fn, ...args) =>{
-    console.log(args.length);
+    // console.log(args.length);
     const rangeArgs = range(0, fn.length);
     const leftList = rangeArgs
         .map(v=>(args[v]===undefined?`X${v}`:null))
         .filter(v=>!!v)
         .join(",");
-    console.log(leftList);
+    // console.log(leftList);
     const rightList = rangeArgs
         .map(v=>(args[v]===undefined?`X${v}`:args[v]))
         .join(",");
-    console.log(rightList);
+    // console.log(rightList);
     return eval(`(${leftList})=>${fn.name}(${rightList})`);
 }
 
@@ -595,5 +598,25 @@ const fix2and5 = partialByEval(
     1960
 );
 
-console.log(fix2and5('a', 'b', 'c'));
-console.log(fix2and5.toString());
+ console.log(fix2and5('a', 'b', 'c'));
+ console.log(fix2and5.toString());
+
+const fixTwoAndFive = function (a,c,d) {
+    return nonsense(a, 33, c, d, 9999);
+};
+
+//console.log(fixTwoAndFive(4,5,6));
+
+const rangeArgs = range(0, 5);
+// console.log(rangeArgs);
+
+const arr2 = [null, 2, null, 4].map(v=>v).filter(v=>!!v);
+// console.log(arr2);
+
+const x = "abc";
+const y = "xyz";
+
+// console.log(`${x+`${y}`}`)
+
+// const fa = eval(2+2);
+// console.log(fa);
