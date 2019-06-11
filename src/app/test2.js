@@ -598,8 +598,8 @@ const fix2and5 = partialByEval(
     1960
 );
 
- console.log(fix2and5('a', 'b', 'c'));
- console.log(fix2and5.toString());
+//  console.log(fix2and5('a', 'b', 'c'));
+//  console.log(fix2and5.toString());
 
 const fixTwoAndFive = function (a,c,d) {
     return nonsense(a, 33, c, d, 9999);
@@ -620,3 +620,41 @@ const y = "xyz";
 
 // const fa = eval(2+2);
 // console.log(fa);
+
+const partialByClosure = (fn, ...args) => {
+    console.log("args", ...args)
+    const partialize = (...args1) => (...args2) => {
+        console.log("args1", ...args1);
+        console.log("args2", ...args2);
+        for (let i = 0; i < args1.length && args2.length; i++){
+            if (args1[i] === undefined){
+                args1[i] = args2.shift();
+            }
+        }
+        const allParams = [...args1, ...args2];
+        console.log(allParams.includes(undefined));
+        return (allParams.includes(undefined) || allParams.length<fn.length?partialize:fn)(...allParams);
+    };
+
+    return partialize(...args);
+}
+
+// const f1 = partialByClosure(make3, undefined);
+//const f1 = partialByClosure(make3, 1, 4, 3);
+//console.log(f1());
+//console.log(f1);
+//  const f2 = f1(undefined);
+
+ //console.log(f2(2));
+
+ const funcA1 = (...args) => (...args1) => {
+    return console.log(...args, ...args1);
+ }
+
+ funcA1(1, 2, 3)("a", "b", "c");
+
+ const funcA2=()=>{
+
+ }
+
+ console.log(funcA2());

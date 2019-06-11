@@ -64,6 +64,25 @@ function callbackFunction(arr){
     console.log(arr);
 }
 
-console.log("calling asyncFunction");
-asyncFunction(callbackFunction);
-console.log("test");
+//console.log("calling asyncFunction");
+//asyncFunction(callbackFunction);
+//console.log("test");
+
+// var a = [[1], [2], [3]];
+// var b = [...a];
+// console.log(a);
+// console.log(b);
+// var tmp = b.shift();
+// console.log(a);
+// console.log(b);
+// console.log(tmp);
+// tmp.shift();
+// console.log(a);
+
+function tmp(...args){
+    console.log("--", (1>2 || 1>2?(()=>3):(()=>1)));
+    console.log("++", (1<2 || 1>2?(()=>3):(()=>1)));
+    return (1>2 || 1>2?(()=>3):(()=>1))(...args);
+}
+
+console.log(tmp(22));
