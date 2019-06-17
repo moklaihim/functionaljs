@@ -1,2 +1,1 @@
-Partial application with eval()
-Let's finish this section by writing some tests. What are some things we should consider?
+Partial curryingResume at "Now, let's consider functions with a variable number of parameters. As before, we'll have to provide an extra value:"

@@ -1,16 +1,103 @@
-describe("with curryByBind2", function(){
-    it("you fix arguments one by one", ()=>{
-        const suma = curryByBind2(sum2, 5);
-        const sumb = suma(1)(2)(3)(4)(5);
-        expect(sumb).toBe(sum2(1, 2, 3, 4, 5));
+describe("with partialCurryingByBind", function(){
+    it("you could fix arguments in several steps", ()=>{
+        const make3a = partialCurryingByBind(make3);
+        const make3b = make3a(1, 2);
+        const make3c = make3b(3);
+        expect(make3c).toBe(make3(1, 2, 3));        
     });
-
-    it("you can also work with arity 1", ()=>{
-        const suma = curryByBind2(sum2, 1);
-        const sumb = suma(111);
-        expect(sumb).toBe(sum2(111));
+    it("you could fix arguments in a single step", ()=>{
+        const make3a = partialCurryingByBind(make3);
+        const make3b = make3a(10, 11, 12);
+        expect(make3b).toBe(make3(10, 11, 12));
+    });
+    it("you could fix ALL the arguments", ()=>{
+        const make3all = partialCurryingByBind(make3);
+        expect(make3all(20, 21, 22)).toBe(make3(20, 21, 22));
+    });
+    it("you could fix one argument at a time", ()=>{
+        const make3one = partialCurryingByBind(make3)(30)(31)(32);
+        expect(make3one).toBe(make3(30, 31, 32));
     });
 });
+
+// describe("with partialByClosure()", function(){
+//     it("you could fix no arguments", ()=>{
+//         const nonsensePC0 = partialByClosure(nonsense);
+//         expect(nonsensePC0(0,1,2,3,4)).toBe(nonsense(0,1,2,3,4));
+//     });
+
+//     it("you could fix only some initial arguments, and then some more", ()=>{
+//         const nonsensePC1 = partialByClosure(nonsense, 1, 2, 3);
+//         const nonsensePC1b = nonsensePC1(undefined, 5);
+//         expect(nonsensePC1b(4)).toBe(nonsense(1, 2, 3, 4, 5));
+//     });
+
+//     it("you could skip some arguments", ()=>{
+//         const nonsensePC2 = partialByClosure(nonsense, undefined, 22, undefined, 44);
+//         expect(nonsensePC2(11, 33, 55)).toBe(nonsense(11, 22, 33, 44, 55));
+//     });
+
+//     it("you could fix only some last arguments", ()=>{
+//         const nonsensePC3 = partialByClosure(nonsense, undefined, undefined, undefined, 444, 555)
+//         expect(nonsensePC3(111)(222, 333)).toBe(nonsense(111, 222, 333, 444, 555));
+//     });
+
+//     it("you could simulate currying", ()=>{
+//         const nonsensePC4 = partialByClosure(nonsense);
+//         expect(nonsensePC4(6)(7)(8)(9)(0)).toBe(nonsense(6, 7, 8, 9, 0));
+//     });
+
+//     it("you could fix ALL the arguments", ()=>{
+//         const nonsensePC5 = partialByClosure(nonsense, 16, 17, 18, 19, 20);
+//         expect(nonsensePC5()).toBe(nonsense(16, 17, 18, 19, 20));
+//     });
+// });
+
+// describe("with partialByEval()", function(){
+//     it("you could fix no arguments", ()=>{
+//         const nonsensePC0 = partialByEval(nonsense);
+//         expect(nonsensePC0.length).toBe(5);
+//         expect(nonsensePC0(0,1,2,3,4)).toBe(nonsense(0,1,2,3,4));
+//     });
+    
+//     it("you could fix only some initial arguments", ()=>{
+//         const nonsensePC1 = partialByEval(nonsense, 1, 2, 3);
+//         expect(nonsensePC1.length).toBe(2);
+//         expect(nonsensePC1(4,5)).toBe(nonsense(1,2,3,4,5));
+//     });
+
+//     it("you could skip some arguments", ()=>{
+//         const nonsensePC2 = partialByEval(nonsense, undefined, 22, undefined, 44);
+//         expect(nonsensePC2.length).toBe(3);
+//         expect(nonsensePC2(11, 33, 55)).toBe(nonsense(11, 22, 33, 44, 55));
+//     });
+
+//     it("you could fix only some last arguments", ()=>{
+//         const nonsensePC3 = partialByEval(nonsense, undefined, undefined, undefined, 444, 555);
+//         expect(nonsensePC3.length).toBe(3);
+//         expect(nonsensePC3(111, 222, 333)).toBe(nonsense(111, 222, 333, 444, 555));
+//     });
+
+//     it("you could fix ALL the arguments", ()=>{
+//         const nonsensePC4 = partialByEval(nonsense, 6, 7, 8, 9, 0);
+//         expect(nonsensePC4.length).toBe(0);
+//         expect(nonsensePC4()).toBe(nonsense(6, 7, 8, 9, 0));
+//     });
+// });
+
+// describe("with curryByBind2", function(){
+//     it("you fix arguments one by one", ()=>{
+//         const suma = curryByBind2(sum2, 5);
+//         const sumb = suma(1)(2)(3)(4)(5);
+//         expect(sumb).toBe(sum2(1, 2, 3, 4, 5));
+//     });
+
+//     it("you can also work with arity 1", ()=>{
+//         const suma = curryByBind2(sum2, 1);
+//         const sumb = suma(111);
+//         expect(sumb).toBe(sum2(111));
+//     });
+// });
 
 // describe("with curryByBind", function(){
 //     it("you fix arguments one by one", ()=>{

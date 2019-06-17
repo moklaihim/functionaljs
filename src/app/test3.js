@@ -85,4 +85,28 @@ function tmp(...args){
     return (1>2 || 1>2?(()=>3):(()=>1))(...args);
 }
 
-console.log(tmp(22));
+// console.log(tmp(22));
+
+const partialCurryingByBind = (fn) => {
+    console.log("fn.length", fn.length);
+    if (fn.length === 0){
+        console.log("returning function that can be called");
+        return fn();
+    } else {
+        console.log("returning function that takes some or all arguments\n");
+        return (...pp) => {
+            var tmpFn = fn.bind(null, ...pp);
+            console.log("tmpFn.length", tmpFn.length)
+            return partialCurryingByBind(tmpFn);
+        }
+    }
+};
+
+const make3 = (a, b, c) => {
+    return String(100 * a + 10 * b + c);
+}
+
+const f1 = partialCurryingByBind(make3);
+const f2 = f1(1);
+const f3 = f2(2);
+const f4 = f3(3);

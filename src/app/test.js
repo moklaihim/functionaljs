@@ -227,3 +227,5 @@ const partialByClosure = (fn, ...args)=>{
 
     return partialize(...args);
 }
+
+const partialCurryingByBind = fn => fn.length===0 ? fn() : (...pp) => partialCurryingByBind(fn.bind(null, ...pp));
