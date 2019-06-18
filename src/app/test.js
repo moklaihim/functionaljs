@@ -229,3 +229,7 @@ const partialByClosure = (fn, ...args)=>{
 }
 
 const partialCurryingByBind = fn => fn.length===0 ? fn() : (...pp) => partialCurryingByBind(fn.bind(null, ...pp));
+
+const partialCurryingByBind2 = (fn, len = fn.length) => len === 0 ? fn() : (...pp) => partialCurryingByBind2(fn.bind(null, ...pp), len - pp.length);
+
+//const sum2 = (...args) => args.reduce((x, y)=>x+y, 0);

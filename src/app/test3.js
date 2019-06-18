@@ -106,7 +106,53 @@ const make3 = (a, b, c) => {
     return String(100 * a + 10 * b + c);
 }
 
-const f1 = partialCurryingByBind(make3);
-const f2 = f1(1);
-const f3 = f2(2);
-const f4 = f3(3);
+// const f1 = partialCurryingByBind(make3);
+// const f2 = f1(1);
+// const f3 = f2(2);
+// const f4 = f3(3);
+
+const partialCurryingByBind2 = (fn, len = fn.length) => {
+    return len === 0 ? fn() : (...pp) => {
+        return partialCurryingByBind2(fn.bind(null, ...pp), len - pp.length);
+    }
+}
+
+const sum = (...args) => args.reduce((x, y) => x+ y, 0);
+
+pcSum5 = partialCurryingByBind2(sum, 5);
+//console.log(pcSum5(1, 5)(3)(7, 4));
+
+pcSuma = partialCurryingByBind2(sum, 5);
+pcSumb = pcSuma(1, 2, 3, 4);
+//console.log(pcSumb(5));
+
+const partialCurryByClosure = fn => {    
+    const curryize = (...args1) => {
+        console.log("args1.length", args1.length, args1[0]);
+        return (...args2) => {
+            console.log("args2.length", args2.length, args2[0]);
+            const allParams = [...args1, ...args2];
+            console.log("allParams.length", allParams.length, allParams[0]);
+            return (allParams.length < fn.length ? curryize : fn)(...allParams);
+        };
+    };
+    return curryize();
+}
+
+// pcSumI = partialCurryByClosure(make3);
+// pcSumII = pcSumI(33);
+// pcSumIII = pcSumII(2);
+// pcSumIIII = pcSumIII(3);
+// console.log(pcSumIIII);
+
+
+const demethodize3 = fn => (...args) => {
+    //console.log(args.length, args[0]);
+    return fn.bind(...args)();
+};
+const name = "FUNCTIONAL";
+const map = demethodize3(Array.prototype.map);
+const toUpperCase = demethodize3(String.prototype.toUpperCase);
+const result2 = map(name, toUpperCase);
+console.log(result2);
+// console.log(toUpperCase("abc"));
