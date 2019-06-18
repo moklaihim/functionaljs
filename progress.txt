@@ -1,1 +1,1 @@
-Partial curryingResume at "Now, let's consider functions with a variable number of parameters. As before, we'll have to provide an extra value:"
+Being functional
