@@ -154,5 +154,41 @@ const name = "FUNCTIONAL";
 const map = demethodize3(Array.prototype.map);
 const toUpperCase = demethodize3(String.prototype.toUpperCase);
 const result2 = map(name, toUpperCase);
-console.log(result2);
+//console.log(result2);
 // console.log(toUpperCase("abc"));
+
+// const myAdd3 = (a, b, c) => a + b + c;
+// const fixedAdd3 = (b, c) => myAdd3(1, b, c);
+// console.log(fixedAdd3(4, 5));
+
+const sumMany = total => number => 
+    number === undefined ? total : sumMany(total + number);
+    
+
+//console.log(sumMany(1)(2)(3)());
+
+const applyStyle = style => content => 
+    `<${style}>${content}</${style}>`;
+
+//console.log(applyStyle("b")("my content"));
+
+// Function.prototype.curry = function(){
+//     return (arga) => {
+//         return (argb) => {
+//             return (argc) => {
+//                 return this(arga, argb, argc);
+//             }
+//         }
+//     }
+// };
+
+Function.prototype.curry = function() {    
+    console.log(this.length);
+    return this.length === 0 ? this() : p => this.bind(this, p).curry();    
+};
+
+const sum3 = (a, b, c) => 100 * a + 10 * b + c;
+console.log(sum3.curry()(1)(2)(4));
+console.log(sum3.curry()(2)(2)(4));
+const sum3a = sum3.curry()(2)(2);
+console.log(sum3a(9));
