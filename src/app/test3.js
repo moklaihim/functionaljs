@@ -187,8 +187,16 @@ Function.prototype.curry = function() {
     return this.length === 0 ? this() : p => this.bind(this, p).curry();    
 };
 
-const sum3 = (a, b, c) => 100 * a + 10 * b + c;
-console.log(sum3.curry()(1)(2)(4));
-console.log(sum3.curry()(2)(2)(4));
-const sum3a = sum3.curry()(2)(2);
-console.log(sum3a(9));
+// const sum3 = (a, b, c) => 100 * a + 10 * b + c;
+// console.log(sum3.curry()(1)(2)(4));
+// console.log(sum3.curry()(2)(2)(4));
+// const sum3a = sum3.curry()(2)(2);
+// console.log(sum3a(9));
+const range = (start, stop) => new Array(stop-start).fill(0).map((v, i)=>start+i);
+
+const uncurryByEval = (fn, len) => {
+    return eval(`(${range(0, len).map(z=>`x${z}`).join(",")}) => ${fn.name}${range(0, len).map(z=>`(x${z})`).join("")}`);
+}
+const make3c = (a)=>(b)=>(c)=>make3(a,b,c);
+console.log(make3c(2)(3)(4));
+console.log(uncurryByEval(make3c, 3)(1,2,3));
