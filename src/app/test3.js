@@ -150,11 +150,11 @@ const demethodize3 = fn => (...args) => {
     //console.log(args.length, args[0]);
     return fn.bind(...args)();
 };
-const name = "FUNCTIONAL";
+const name = "functional";
 const map = demethodize3(Array.prototype.map);
 const toUpperCase = demethodize3(String.prototype.toUpperCase);
 const result2 = map(name, toUpperCase);
-//console.log(result2);
+console.log("Result2:", result2);
 // console.log(toUpperCase("abc"));
 
 // const myAdd3 = (a, b, c) => a + b + c;
