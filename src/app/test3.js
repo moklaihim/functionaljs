@@ -1,27 +1,27 @@
-function SuperType(){
+function SuperType() {
     this.property = true;
 }
 
-SuperType.prototype.getSuperValue = function(){
+SuperType.prototype.getSuperValue = function () {
     return this.property;
 };
 
-function SubType(){
+function SubType() {
     this.subproperty = false;
 }
 
 SubType.prototype = new SuperType();
 
-SubType.prototype.getSubValue = function(){
+SubType.prototype.getSubValue = function () {
     return this.subproperty;
 };
 
-function SubSubType(){
+function SubSubType() {
     this.subsubproperty = false;
 }
 
 SubSubType.prototype = Object.create(SubType.prototype);
-SubSubType.prototype.getSubSubValue = function(){
+SubSubType.prototype.getSubSubValue = function () {
     return this.subsubproperty;
 }
 SubSubType.id = 1;
@@ -52,15 +52,15 @@ dict.chris = 62;
 
 //console.log(Object.getOwnPropertyNames(dict).map(name=>name));
 
-function asyncFunction(callback){
+function asyncFunction(callback) {
     var result = ["a", "b", "c"];
 
     setTimeout(callback.bind(null, result), 0);
-    
+
     return;
 }
 
-function callbackFunction(arr){
+function callbackFunction(arr) {
     console.log(arr);
 }
 
@@ -79,17 +79,17 @@ function callbackFunction(arr){
 // tmp.shift();
 // console.log(a);
 
-function tmp(...args){
-    console.log("--", (1>2 || 1>2?(()=>3):(()=>1)));
-    console.log("++", (1<2 || 1>2?(()=>3):(()=>1)));
-    return (1>2 || 1>2?(()=>3):(()=>1))(...args);
+function tmp(...args) {
+    console.log("--", (1 > 2 || 1 > 2 ? (() => 3) : (() => 1)));
+    console.log("++", (1 < 2 || 1 > 2 ? (() => 3) : (() => 1)));
+    return (1 > 2 || 1 > 2 ? (() => 3) : (() => 1))(...args);
 }
 
 // console.log(tmp(22));
 
 const partialCurryingByBind = (fn) => {
     console.log("fn.length", fn.length);
-    if (fn.length === 0){
+    if (fn.length === 0) {
         console.log("returning function that can be called");
         return fn();
     } else {
@@ -117,7 +117,7 @@ const partialCurryingByBind2 = (fn, len = fn.length) => {
     }
 }
 
-const sum = (...args) => args.reduce((x, y) => x+ y, 0);
+const sum = (...args) => args.reduce((x, y) => x + y, 0);
 
 pcSum5 = partialCurryingByBind2(sum, 5);
 //console.log(pcSum5(1, 5)(3)(7, 4));
@@ -126,7 +126,7 @@ pcSuma = partialCurryingByBind2(sum, 5);
 pcSumb = pcSuma(1, 2, 3, 4);
 //console.log(pcSumb(5));
 
-const partialCurryByClosure = fn => {    
+const partialCurryByClosure = fn => {
     const curryize = (...args1) => {
         console.log("args1.length", args1.length, args1[0]);
         return (...args2) => {
@@ -161,13 +161,13 @@ console.log("Result2:", result2);
 // const fixedAdd3 = (b, c) => myAdd3(1, b, c);
 // console.log(fixedAdd3(4, 5));
 
-const sumMany = total => number => 
+const sumMany = total => number =>
     number === undefined ? total : sumMany(total + number);
-    
+
 
 //console.log(sumMany(1)(2)(3)());
 
-const applyStyle = style => content => 
+const applyStyle = style => content =>
     `<${style}>${content}</${style}>`;
 
 //console.log(applyStyle("b")("my content"));
@@ -182,9 +182,9 @@ const applyStyle = style => content =>
 //     }
 // };
 
-Function.prototype.curry = function() {    
+Function.prototype.curry = function () {
     console.log(this.length);
-    return this.length === 0 ? this() : p => this.bind(this, p).curry();    
+    return this.length === 0 ? this() : p => this.bind(this, p).curry();
 };
 
 // const sum3 = (a, b, c) => 100 * a + 10 * b + c;
@@ -192,11 +192,37 @@ Function.prototype.curry = function() {
 // console.log(sum3.curry()(2)(2)(4));
 // const sum3a = sum3.curry()(2)(2);
 // console.log(sum3a(9));
-const range = (start, stop) => new Array(stop-start).fill(0).map((v, i)=>start+i);
+const range = (start, stop) => new Array(stop - start).fill(0).map((v, i) => start + i);
 
 const uncurryByEval = (fn, len) => {
-    return eval(`(${range(0, len).map(z=>`x${z}`).join(",")}) => ${fn.name}${range(0, len).map(z=>`(x${z})`).join("")}`);
+    return eval(`(${range(0, len).map(z => `x${z}`).join(",")}) => ${fn.name}${range(0, len).map(z => `(x${z})`).join("")}`);
 }
-const make3c = (a)=>(b)=>(c)=>make3(a,b,c);
-console.log(make3c(2)(3)(4));
-console.log(uncurryByEval(make3c, 3)(1,2,3));
+const make3c = (a) => (b) => (c) => make3(a, b, c);
+// console.log(make3c(2)(3)(4));
+// console.log(uncurryByEval(make3c, 3)(1,2,3));
+
+const filterByText = (text, arr) => arr.filter(v => v.endsWith(text));
+const filterByContainingText = (text, arr) => arr.filter(v => v.indexOf(text)!==-1);
+const filterOdt = arr => filterByText(".odt", arr);
+const filterDash = arr => filterByContainingText("-", arr);
+const count = arr => arr.length;
+function getDir(path) { 
+    const fs = require("fs"); 
+    const files = fs.readdirSync(path); 
+    return files; 
+}
+
+const pipeTwo = (f, g) => (...args) => g(f(...args));
+
+//console.log(filterDash(getDir(`C:\\Users\\laihi\\projects`)));
+
+const pipeline2 = (...fns) => {
+    return fns.reduce((result, f) => {
+        console.log(result);
+        return (...args) => {
+            return f(result(...args));
+        }
+    });
+}
+
+console.log(pipeline2(getDir, filterDash, count));
