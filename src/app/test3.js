@@ -154,7 +154,7 @@ const name = "functional";
 const map = demethodize3(Array.prototype.map);
 const toUpperCase = demethodize3(String.prototype.toUpperCase);
 const result2 = map(name, toUpperCase);
-console.log("Result2:", result2);
+//console.log("Result2:", result2);
 // console.log(toUpperCase("abc"));
 
 // const myAdd3 = (a, b, c) => a + b + c;
@@ -204,9 +204,16 @@ const make3c = (a) => (b) => (c) => make3(a, b, c);
 const filterByText = (text, arr) => arr.filter(v => v.endsWith(text));
 const filterByContainingText = (text, arr) => arr.filter(v => v.indexOf(text)!==-1);
 const filterOdt = arr => filterByText(".odt", arr);
-const filterDash = arr => filterByContainingText("-", arr);
-const count = arr => arr.length;
+const filterDash = arr => {
+    //.log("in filterDash");
+    return filterByContainingText("-", arr);
+}
+const count = arr => {
+    //console.log("in count");
+    return arr.length;
+}
 function getDir(path) { 
+    //console.log("in getDir");
     const fs = require("fs"); 
     const files = fs.readdirSync(path); 
     return files; 
@@ -217,12 +224,21 @@ const pipeTwo = (f, g) => (...args) => g(f(...args));
 //console.log(filterDash(getDir(`C:\\Users\\laihi\\projects`)));
 
 const pipeline2 = (...fns) => {
-    return fns.reduce((result, f) => {
-        console.log(result);
+    return fns.reduce((result, f, idx) => {
         return (...args) => {
             return f(result(...args));
         }
     });
 }
 
-console.log(pipeline2(getDir, filterDash, count));
+const tee = arg => {
+    console.log(arg);
+    return arg;
+}
+
+const tee2 = (arg, logger = console.log.bind(console)) => {
+    logger(arg);
+    return arg;
+}
+
+console.log(pipeline2(getDir, tee2, filterDash, tee2, count)(`C:\\Users\\laihi\\projects`));

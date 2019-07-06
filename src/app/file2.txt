@@ -1,0 +1,13 @@
+-rwxrwxrwx 1 moklaihim moklaihim   231 Apr 27 07:42 effectivejs.js
+-rwxrwxrwx 1 moklaihim moklaihim  6268 Jun 19 05:32 test.js
+-rwxrwxrwx 1 moklaihim moklaihim 16782 Jun 12 06:51 test2.js
+-rwxrwxrwx 1 moklaihim moklaihim  6461 Jul  2 06:31 test3.js
+-rwxrwxrwx 1 moklaihim moklaihim   231 Apr 27 07:42 effectivejs.js
+-rwxrwxrwx 1 moklaihim moklaihim  6268 Jun 19 05:32 test.js
+-rwxrwxrwx 1 moklaihim moklaihim 16782 Jun 12 06:51 test2.js
+-rwxrwxrwx 1 moklaihim moklaihim  6461 Jul  2 06:31 test3.js
+-rwxrwxrwx 1 moklaihim moklaihim   231 Apr 27 07:42 effectivejs.js
+-rwxrwxrwx 1 moklaihim moklaihim  6268 Jun 19 05:32 test.js
+-rwxrwxrwx 1 moklaihim moklaihim 16782 Jun 12 06:51 test2.js
+-rwxrwxrwx 1 moklaihim moklaihim  6461 Jul  2 06:31 test3.js
+4
