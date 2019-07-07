@@ -472,39 +472,6 @@ let sum = (x, y) => {
     }
 }
 
-// console.log(sum());
-
-const make3 = (a, b, c) => String(100 * a + 10 * b + c);
-const step1 = make3.bind(null, 6);
-const step2 = step1.bind(null, 5);
-const step3 = step2.bind(null, 8);
-// console.log(make3, make3.length);
-// console.log(step1, step1.length);
-// console.log(step2, step2.length);
-// console.log(step3, step3.length);
-// console.log(step1(2, 3));
-
-const curryByBind = fn =>{
-    // console.log("curryByBind", fn.length);
-    return fn.length === 0 ? fn() : p => {
-        // console.log("returning");
-        return curryByBind(fn.bind(null, p))
-    };
-}
-
-// const f1 = curryByBind(make3);
-// const f2 = f1(6);
-// const f3 = f2(5);
-// const f4 = f3(8);
-
-// console.log(f1, f1.length);
-// console.log(f2, f2.length);
-// console.log(f3, f3.length);
-// console.log(f4);
-
-// console.log(f2(5)(2));
-// console.log(f2(5));
-
 const curryByBind2 = (fn, len = fn.length) =>{
     return len===0 ? fn() : p => {
         return curryByBind2(fn.bind(null, p), len-1);
@@ -516,9 +483,6 @@ const sum2 = (...args) => {
 };
 
 curriedSum = curryByBind2(sum2, 4);
-//console.log(curriedSum(1)(5)(3)(7));
-
-//console.log(range(2, 5));
 
 const curryByEval = (fn, len = fn.length) => {
     return eval(`${range(0, len).map(i=>`x${i}`).join("=>")} => ${fn.name}(${range(0, len).map(i=>`x${i}`).join(",")})`);
@@ -527,16 +491,8 @@ const curryByEval2 = (fn, len = fn.length) => {
     return eval(`${range(0, len).map(i=>`x${i}`).join("=>")} => (${fn.toString()})(${range(0, len).map(i=>`x${i}`).join(",")})`);
 }
 
-const m1 = curryByEval(make3);
+//const m1 = curryByEval(make3);
 
-
-// console.log(m1.toString());
-// console.log(m1(2)(3)(4));
-
-// console.log(curryByEval2(make3).toString());
-//console.log(m2(1)(2)(3));
-
-//console.log(`${range(0, 3).map(i=>`x${i}`).join("=>")}`);
 
 function exceptionPromise(){
     
@@ -639,22 +595,26 @@ const partialByClosure = (fn, ...args) => {
     return partialize(...args);
 }
 
-// const f1 = partialByClosure(make3, undefined);
-//const f1 = partialByClosure(make3, 1, 4, 3);
-//console.log(f1());
-//console.log(f1);
-//  const f2 = f1(undefined);
-
- //console.log(f2(2));
-
- const funcA1 = (...args) => (...args1) => {
+const funcA1 = (...args) => (...args1) => {
     return console.log(...args, ...args1);
- }
+}
 
- funcA1(1, 2, 3)("a", "b", "c");
+const make3 = (a, b, c) => String(100 * a + 10 * b + c);
 
- const funcA2=()=>{
+const curryByBind = fn =>{
+     console.log("curryByBind", fn.length);
+    return fn.length === 0 ? fn() : p => {
+        console.log("returning", p);
+        return curryByBind(fn.bind(null, p))
+    };
+}
 
- }
+const add9 = (x) => {
+    console.log(x+9);
+    return x+9;
+}
+//const tap = curryByBind((fn, x)=>(fn(x), x));
+//console.log(tap(add9)(2));
 
- console.log(funcA2());
+const tap2 = fn => x => (fn(x), x);
+console.log(tap2(add9)(2));

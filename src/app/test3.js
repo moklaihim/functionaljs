@@ -202,7 +202,7 @@ const make3c = (a) => (b) => (c) => make3(a, b, c);
 // console.log(uncurryByEval(make3c, 3)(1,2,3));
 
 const filterByText = (text, arr) => arr.filter(v => v.endsWith(text));
-const filterByContainingText = (text, arr) => arr.filter(v => v.indexOf(text)!==-1);
+const filterByContainingText = (text, arr) => arr.filter(v => v.indexOf(text) !== -1);
 const filterOdt = arr => filterByText(".odt", arr);
 const filterDash = arr => {
     //.log("in filterDash");
@@ -212,11 +212,11 @@ const count = arr => {
     //console.log("in count");
     return arr.length;
 }
-function getDir(path) { 
+function getDir(path) {
     //console.log("in getDir");
-    const fs = require("fs"); 
-    const files = fs.readdirSync(path); 
-    return files; 
+    const fs = require("fs");
+    const files = fs.readdirSync(path);
+    return files;
 }
 
 const pipeTwo = (f, g) => (...args) => g(f(...args));
@@ -241,4 +241,48 @@ const tee2 = (arg, logger = console.log.bind(console)) => {
     return arg;
 }
 
-console.log(pipeline2(getDir, tee2, filterDash, tee2, count)(`C:\\Users\\laihi\\projects`));
+//console.log(pipeline2(getDir, tee2, filterDash, tee2, count)(`C:\\Users\\laihi\\projects`));
+
+const getHandler = {
+    get(target, property, receiver) {        
+        if (typeof target[property] === "function") {
+            return (...args) => {
+                const result = target[property](...args);
+                return result === undefined ? receiver : result;
+            };
+        } else {
+            return target[property];
+        }
+    }
+
+};
+
+const chainify = obj => new Proxy(obj, getHandler);
+
+class City { 
+    constructor(name, lat, long) { 
+        this.name = name; this.lat = lat; this.long = long; 
+    } 
+    getName() { 
+        return this.name; 
+    } 
+    setName(newName) { 
+        this.name = newName; 
+    } 
+    setLat(newLat) { 
+        this.lat = newLat; 
+    } 
+    setLong(newLong) { 
+        this.long = newLong; 
+    } 
+    getCoords() { 
+        return [this.lat, this.long]; 
+    } 
+}
+
+let myProx = new Proxy(new City("Singapore", -34.9011, -56.1645), getHandler);
+let myCity = new City("Montevideo, Uruguay", -34.9011, -56.1645);
+
+//myCity = chainify(myCity);
+
+console.log(myProx.getCoords());
