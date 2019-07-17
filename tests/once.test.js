@@ -1,27 +1,172 @@
-describe("with partialCurryingByBind2", function(){
-    it("you could fix arguments in several steps", ()=>{
-        const suma = partialCurryingByBind2(sum2, 3);
-        const sumb = suma(1, 2);
-        const sumc = sumb(3);
-        expect(sumc).toBe(sum2(1, 2, 3));
+// var fn1, fn2, fn3, fn4;
+
+// describe("pipeTwo", function(){
+
+//     beforeEach(()=>{
+//         fn1 = () => {};
+//         fn2 = () => {};
+//     });
+
+//     it("works with single arguments", ()=>{
+//         spyOn(window, "fn1").and.returnValue(1);
+//         spyOn(window, "fn2").and.returnValue(2);
+
+//         const pipe = pipeTwo(fn1, fn2);
+//         const result = pipe(22);
+
+//         expect(fn1).toHaveBeenCalledTimes(1);
+//         expect(fn2).toHaveBeenCalledTimes(1);
+//         expect(fn1).toHaveBeenCalledWith(22);
+//         expect(fn2).toHaveBeenCalledWith(1);
+//         expect(result).toBe(2);
+//     });
+
+//     it("works with multiple arguments", ()=>{
+//         spyOn(window, "fn1").and.returnValue(11);
+//         spyOn(window, "fn2").and.returnValue(22);
+
+//         const pipe = pipeTwo(fn1, fn2);
+//         const result = pipe(12, 4, 56);
+
+//         expect(fn1).toHaveBeenCalledTimes(1);
+//         expect(fn2).toHaveBeenCalledTimes(1);
+//         expect(fn1).toHaveBeenCalledWith(12, 4, 56);
+//         expect(fn2).toHaveBeenCalledWith(11);
+//         expect(result).toBe(22);
+//     });
+// });
+
+// describe("pipeline", function(){
+//     beforeEach(()=>{
+//         fn1 = ()=>{};
+//         fn2 = ()=>{};
+//         fn3 = ()=>{};
+//         fn4 = ()=>{};
+//     });
+
+//     it("works with a single function", ()=>{
+//         spyOn(window, "fn1").and.returnValue(11);
+
+//         const pipe = pipeline(fn1);
+//         const result = pipe(60);
+
+//         expect(fn1).toHaveBeenCalledTimes(1);
+//         expect(fn1).toHaveBeenCalledWith(60);
+//         expect(result).toBe(11);
+//     });
+
+//     it("works with 4 functions, multiple arguments", ()=>{
+//         spyOn(window, "fn1").and.returnValue(111);
+//         spyOn(window, "fn2").and.returnValue(222);
+//         spyOn(window, "fn3").and.returnValue(333);
+//         spyOn(window, "fn4").and.returnValue(444);
+
+//         const pipe = pipeline(fn1, fn2, fn3, fn4);
+//         const result = pipe(24, 11, 63);
+
+//         expect(fn1).toHaveBeenCalledTimes(1);
+//         expect(fn2).toHaveBeenCalledTimes(1);
+//         expect(fn3).toHaveBeenCalledTimes(1);
+//         expect(fn4).toHaveBeenCalledTimes(1);
+//         expect(fn1).toHaveBeenCalledWith(24, 11, 63);
+//         expect(fn2).toHaveBeenCalledWith(111);
+//         expect(fn3).toHaveBeenCalledWith(222);
+//         expect(fn4).toHaveBeenCalledWith(333);
+//         expect(result).toBe(444);
+//     });
+// });
+
+// describe("compose", function(){
+//     beforeEach(()=>{
+//         fn1 = ()=>{};
+//         fn2 = ()=>{};
+//         fn3 = ()=>{};
+//         fn4 = ()=>{};
+//     });    
+
+//     it("works with 4 functions, multiple arguments", ()=>{
+//         spyOn(window, "fn1").and.returnValue(111);
+//         spyOn(window, "fn2").and.returnValue(222);
+//         spyOn(window, "fn3").and.returnValue(333);
+//         spyOn(window, "fn4").and.returnValue(444);
+
+//         const pipe = compose(fn4, fn3, fn2, fn1);
+//         const result = pipe(24, 11, 63);
+
+//         expect(fn1).toHaveBeenCalledTimes(1);
+//         expect(fn2).toHaveBeenCalledTimes(1);
+//         expect(fn3).toHaveBeenCalledTimes(1);
+//         expect(fn4).toHaveBeenCalledTimes(1);
+//         expect(fn1).toHaveBeenCalledWith(24, 11, 63);
+//         expect(fn2).toHaveBeenCalledWith(111);
+//         expect(fn3).toHaveBeenCalledWith(222);
+//         expect(fn4).toHaveBeenCalledWith(333);
+//         expect(result).toBe(444);
+//     });
+// });
+
+var myCity;
+
+describe("chanify", function(){
+    beforeEach(()=>{
+        myCity = new City("Montevideo, Uruguay", -34.9011, -56.1645);
+        myCity = chainify(myCity);
     });
 
-    it("you could fix arguments in a single step", ()=>{
-        const suma = partialCurryingByBind2(sum2, 4);
-        const sumb = suma(10, 11, 12, 13);
-        expect(sumb).toBe(sum2(10, 11, 12, 13));
+    it("doesn't affect get functions", ()=>{
+        expect(myCity.getName()).toBe("Montevideo, Uruguay");
+        expect(myCity.getCoords()[0]).toBe(-34.9011);
+        expect(myCity.getCoords()[1]).toBe(-56.1645);
     });
 
-    it("you could fix ALL the arguments", ()=>{
-        const sumall = partialCurryingByBind2(sum2, 5);
-        expect(sumall(20, 21, 22, 23, 24)).toBe(sum2(20, 21, 22, 23, 24));
+    it("doesn't affect getting attributes", ()=>{
+        expect(myCity.name).toBe("Montevideo, Uruguay");
+        expect(myCity.lat).toBe(-34.9011);
+        expect(myCity.long).toBe(-56.1645);
     });
 
-    it("you could fix one argument at a time", ()=>{
-        const sumone = partialCurryingByBind2(sum2, 6)(30)(31)(32)(33)(34)(35);
-        expect(sumone).toBe(sum2(30, 31, 32, 33, 34, 35));
+    it("returns itself from setting functions", ()=>{
+        expect(myCity.setName("Other name")).toBe(myCity);
+        expect(myCity.setLat(11)).toBe(myCity);
+        expect(myCity.setLat(22)).toBe(myCity);
+    });
+
+    it("allows chaining", ()=>{
+        const newCoords = myCity
+            .setName("Pune, India")
+            .setLat(18.5626)
+            .setLong(73.8087)
+            .getCoords();
+
+        expect(myCity.name).toBe("Pune, India");
+        expect(newCoords[0]).toBe(18.5626);
+        expect(newCoords[1]).toBe(73.8087);
     });
 });
+// describe("with partialCurryingByBind2", function(){
+//     it("you could fix arguments in several steps", ()=>{
+//         const suma = partialCurryingByBind2(sum2, 3);
+//         const sumb = suma(1, 2);
+//         const sumc = sumb(3);
+//         expect(sumc).toBe(sum2(1, 2, 3));
+//     });
+
+//     it("you could fix arguments in a single step", ()=>{
+//         const suma = partialCurryingByBind2(sum2, 4);
+//         const sumb = suma(10, 11, 12, 13);
+//         expect(sumb).toBe(sum2(10, 11, 12, 13));
+//     });
+
+//     it("you could fix ALL the arguments", ()=>{
+//         const sumall = partialCurryingByBind2(sum2, 5);
+//         expect(sumall(20, 21, 22, 23, 24)).toBe(sum2(20, 21, 22, 23, 24));
+//     });
+
+//     it("you could fix one argument at a time", ()=>{
+//         const sumone = partialCurryingByBind2(sum2, 6)(30)(31)(32)(33)(34)(35);
+//         expect(sumone).toBe(sum2(30, 31, 32, 33, 34, 35));
+//     });
+// });
 
 // describe("with partialCurryingByBind", function(){
 //     it("you could fix arguments in several steps", ()=>{

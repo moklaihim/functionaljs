@@ -233,3 +233,54 @@ const partialCurryingByBind = fn => fn.length===0 ? fn() : (...pp) => partialCur
 const partialCurryingByBind2 = (fn, len = fn.length) => len === 0 ? fn() : (...pp) => partialCurryingByBind2(fn.bind(null, ...pp), len - pp.length);
 
 //const sum2 = (...args) => args.reduce((x, y)=>x+y, 0);
+
+const pipeTwo = (f, g) => (...args) => g(f(...args));
+
+const pipeline = (...fns) => {
+    return fns.reduce((result, f) => {
+        return (...args) => {
+            return f(result(...args));
+        }
+    });
+}
+
+const compose = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)));
+
+const getHandler = {
+    get(target, property, receiver) {        
+        console.log(target, property, receiver);
+        if (typeof target[property] === "function") {
+            return function (...args) {
+                const result = target[property](...args);
+                console.log("result", result);
+                return result === undefined ? receiver : result;
+            };
+        } else {
+            return target[property];
+        }
+    }
+
+};
+
+const chainify = obj => new Proxy(obj, getHandler);
+
+class City { 
+    constructor(name, lat, long) { 
+        this.name = name; this.lat = lat; this.long = long; 
+    } 
+    getName() { 
+        return this.name; 
+    } 
+    setName(newName) { 
+        this.name = newName; 
+    } 
+    setLat(newLat) { 
+        this.lat = newLat; 
+    } 
+    setLong(newLong) { 
+        this.long = newLong; 
+    } 
+    getCoords() { 
+        return [this.lat, this.long]; 
+    } 
+}

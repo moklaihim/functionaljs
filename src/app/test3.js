@@ -285,4 +285,32 @@ let myCity = new City("Montevideo, Uruguay", -34.9011, -56.1645);
 
 //myCity = chainify(myCity);
 
-console.log(myProx.getCoords());
+// console.log(myProx.getCoords());
+
+const removeNonAlpha = str => str.replace(/[^a-z]/gi, " ");
+// const toUpperCase = 
+const splitInWords = str => str.trim().split(/\s+/);
+const arrayToSet = arr => new Set(arr);
+const setToList = set => Array.from(set).sort();
+
+const GETTYSBURG_1_2 = `Four score and seven years ago
+our fathers brought forth on this continent,
+a new nation, conceived in Liberty, and dedicated to
+the proposition that all men are created equal.
+Now we are engaged in a great civil war, testing whether
+that nation, or any nation so conceived and dedicated,
+can long endure.`;
+
+const composeUsingReduceRight = (...fns) => fns.reduceRight((f,g) => (...args) => g(f(...args)));
+// console.log(composeUsingReduceRight(setToList, arrayToSet, splitInWords, toUpperCase, removeNonAlpha)(GETTYSBURG_1_2));
+
+const composeUsingReduce = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)));
+// console.log(composeUsingReduce(setToList, arrayToSet, splitInWords, toUpperCase, removeNonAlpha)(GETTYSBURG_1_2));
+
+function letTest(){
+    console.log("1", x);
+    var x = 1;
+    console.log("2", x);
+}
+
+letTest();
