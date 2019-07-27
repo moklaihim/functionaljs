@@ -153,6 +153,7 @@ const demethodize3 = fn => (...args) => {
 const name = "functional";
 const map = demethodize3(Array.prototype.map);
 const toUpperCase = demethodize3(String.prototype.toUpperCase);
+const toLowerCase = demethodize3(String.prototype.toLowerCase);
 const result2 = map(name, toUpperCase);
 //console.log("Result2:", result2);
 // console.log(toUpperCase("abc"));
@@ -244,7 +245,7 @@ const tee2 = (arg, logger = console.log.bind(console)) => {
 //console.log(pipeline2(getDir, tee2, filterDash, tee2, count)(`C:\\Users\\laihi\\projects`));
 
 const getHandler = {
-    get(target, property, receiver) {        
+    get(target, property, receiver) {
         if (typeof target[property] === "function") {
             return (...args) => {
                 const result = target[property](...args);
@@ -259,25 +260,25 @@ const getHandler = {
 
 const chainify = obj => new Proxy(obj, getHandler);
 
-class City { 
-    constructor(name, lat, long) { 
-        this.name = name; this.lat = lat; this.long = long; 
-    } 
-    getName() { 
-        return this.name; 
-    } 
-    setName(newName) { 
-        this.name = newName; 
-    } 
-    setLat(newLat) { 
-        this.lat = newLat; 
-    } 
-    setLong(newLong) { 
-        this.long = newLong; 
-    } 
-    getCoords() { 
-        return [this.lat, this.long]; 
-    } 
+class City {
+    constructor(name, lat, long) {
+        this.name = name; this.lat = lat; this.long = long;
+    }
+    getName() {
+        return this.name;
+    }
+    setName(newName) {
+        this.name = newName;
+    }
+    setLat(newLat) {
+        this.lat = newLat;
+    }
+    setLong(newLong) {
+        this.long = newLong;
+    }
+    getCoords() {
+        return [this.lat, this.long];
+    }
 }
 
 let myProx = new Proxy(new City("Singapore", -34.9011, -56.1645), getHandler);
@@ -292,7 +293,10 @@ const removeNonAlpha = str => str.replace(/[^a-z]/gi, " ");
 const splitInWords = str => str.trim().split(/\s+/);
 const arrayToSet = arr => new Set(arr);
 const setToList = set => Array.from(set).sort();
-
+const upperCaseFirstChar = str => str.replace(/^./, toUpperCase(str.trim().charAt()));
+const upperCaseAllWords = arr => arr.map(upperCaseFirstChar);
+const arrayToStr = arr => arr.join(" ");
+const lowerCaseAllWords = arr => arr.map(toLowerCase);
 const GETTYSBURG_1_2 = `Four score and seven years ago
 our fathers brought forth on this continent,
 a new nation, conceived in Liberty, and dedicated to
@@ -301,16 +305,81 @@ Now we are engaged in a great civil war, testing whether
 that nation, or any nation so conceived and dedicated,
 can long endure.`;
 
-const composeUsingReduceRight = (...fns) => fns.reduceRight((f,g) => (...args) => g(f(...args)));
+const composeUsingReduceRight = (...fns) => fns.reduceRight((f, g) => (...args) => g(f(...args)));
 // console.log(composeUsingReduceRight(setToList, arrayToSet, splitInWords, toUpperCase, removeNonAlpha)(GETTYSBURG_1_2));
 
 const composeUsingReduce = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)));
 // console.log(composeUsingReduce(setToList, arrayToSet, splitInWords, toUpperCase, removeNonAlpha)(GETTYSBURG_1_2));
 
-function letTest(){
-    console.log("1", x);
-    var x = 1;
-    console.log("2", x);
+conposeUsingReduce2 = (...fns) => {
+    return fns.reduce((f, g) => {
+        return (...args) => {
+            return f(g(...args));
+        }
+    });
 }
 
-letTest();
+pipeline3 = (...fns) => {
+    return fns.reduce((f, g) => {
+        return (...args) => {
+            return g(f(...args));
+        }
+    });
+}
+
+headline = conposeUsingReduce2(arrayToStr, upperCaseAllWords, lowerCaseAllWords, splitInWords);
+headline2 = pipeline3(splitInWords, lowerCaseAllWords, upperCaseAllWords, arrayToStr);
+// console.log(headline("aSd's QqwW aSd sDF dfg"));
+// console.log(headline2("aSd's QqwW aSd sDF dfg"));
+
+const allTasks = { 
+    date: "2017-09-22", 
+    byPerson: [
+        { 
+            responsible: "EG", 
+            tasks: [
+                { id: 111, desc: "task 111", done: false }, 
+                { id: 222, desc: "task 222", done: false }
+            ] 
+        }, 
+        { 
+            responsible: "FK", 
+            tasks: [
+                { id: 555, desc: "task 555", done: false }, 
+                { id: 777, desc: "task 777", done: true }, 
+                { id: 999, desc: "task 999", done: false }
+            ] 
+        }, 
+        { 
+            responsible: "ST", 
+            tasks: [
+                { id: 444, desc: "task 444", done: true }
+            ] 
+        }
+    ] 
+};
+
+
+const getField = attr => obj => obj[attr];
+const filter = fn => arr => arr.filter(fn);
+const map2 = fn => arr => arr.map(fn);
+const reduce = (fn, initVal) => arr => arr.reduce(fn, initVal);
+
+const pending = (tasksList, name) => {
+    return pipeline3(
+        getField("byPerson"),
+        filter(person=>person.responsible===name),
+        map2(person=>person.tasks),
+        reduce((y, x)=>x, []),
+        filter(task=>!task.done),
+        map2(task=>task.id)
+    )(tasksList);
+}
+
+console.log(pending(allTasks, "FK"));
+
+//const getResults = pipeline3(select, filter, group, sort)
+
+const curry3 = fn => a => b => c => fn(a, b, c);
+const make3Curry = curry3(make3);
+console.log(make3Curry(1)(2)(3));
