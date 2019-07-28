@@ -1,43 +1,41 @@
-const pipeline = (...fns) => {
-    return fns.reduce((result, f) => {
-        return (...args) => {
-            return f(result(...args));
-        }
-    });
-}
+// const powerN = (base, power) => {
+    
+//     if (power === 0) { 
+//         return 1; 
+//     } else if (power % 2) { // odd power?
+//         console.log("return odd", `${base} * (${base}, ${power} - 1)`);
+//         return base * powerN(base, power - 1);    
+//     } else { // even power?        
+//         console.log("return even", `(${base} * ${base}, ${power} / 2)`);
+//         return powerN(base * base, power / 2);    
+//     }
+// };
 
-const allTasks = { 
-    date: "2017-09-22", 
-    byPerson: [
-        { 
-            responsible: "EG", 
-            tasks: [
-                { id: 111, desc: "task 111", done: false }, 
-                { id: 222, desc: "task 222", done: false }
-            ] 
-        }, 
-        { 
-            responsible: "FK", 
-            tasks: [
-                { id: 555, desc: "task 555", done: false }, 
-                { id: 777, desc: "task 777", done: true }, 
-                { id: 999, desc: "task 999", done: false }
-            ] 
-        }, 
-        { 
-            responsible: "ST", 
-            tasks: [
-                { id: 444, desc: "task 444", done: true }
-            ] 
-        }
-    ] 
+// console.log(powerN(2, 10));
+
+// const hanoi = (disks, from, to, extra) => {    
+//     console.log(".");
+//     if (disks === 1) {        
+//         console.log(`Move disk 1 from post ${from} to post ${to}`);    
+//     } else {        
+//         hanoi(disks - 1, from, extra, to);        
+//         console.log(`Move disk ${disks} from post ${from} to post ${to}`);        
+//         hanoi(disks - 1, extra, to, from);    
+//     }
+// };
+
+// hanoi(4, "A", "B", "C");
+
+const quicksort = arr => {  
+    console.log("Arg: ", arr);
+    if (arr.length < 2) {    
+        return arr;  
+    } else {    
+        const pivot = arr[0];    
+        const smaller = arr.slice(1).filter(x => x < pivot);    
+        const greaterEqual = arr.slice(1).filter(x => x >= pivot);    
+        return [...quicksort(smaller), pivot, ...quicksort(greaterEqual)];  
+    }
 };
 
-const getField = attr => obj => obj[attr];
-const filter = fn => arr => arr.filter(fn);
-const map = fn => arr => arr.map(fn);
-const reduce = (fn, init) => arr => arr.reduce(fn, init);
-
-const pending = (name) =>    pipeline(        getField("byPerson"),        filter(t => t.responsible === name),        map(t => t.tasks),        reduce((y, x) => x, []),        filter(t => t && !t.done),        map(getField("id"))    )(allTasks || {byPerson: []});
-
-console.log(pending("FK"));
+console.log(quicksort([22, 9, 60, 12, 4, 56]));
