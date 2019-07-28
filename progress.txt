@@ -1,1 +1,3 @@
-Dynamic programming: making change
+Mapping and filtering
+
+There's only one pending issue: if the original array has some missing elements, they should be skipped during the loop:
