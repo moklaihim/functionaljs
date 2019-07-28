@@ -225,13 +225,13 @@ const checkPlace = (column, row) =>
             .slice(0, column)        
             .every((v, i) => v !== row && Math.abs(v - row) !== column - i);
 
-const finder = (column = 0) => {    
+const finder = (column = 0) => {        
     if (column === SIZE) {        
         // all columns tried out?        
         console.log(places.map(x => x + 1)); // print out solution        
         solutions++; // count it            
     } else {        
-        const testRowsInColumn = j => {            
+        const testRowsInColumn = j => {               
             if (j < SIZE) {                
                 if (checkPlace(column, j)) {                    
                     places[column] = j;                    
