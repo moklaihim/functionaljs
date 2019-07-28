@@ -79,25 +79,171 @@ const mapR4 = (orig, cb) => {    const mapLoop = (arr, i) =>        arr.length =
 const mapR2 = (arr, cb, i = 0, orig = arr) =>    arr.length == 0        ? []        : [cb(arr[0], i, orig)].concat(              mapR2(arr.slice(1), cb, i + 1, orig)          );
 
 const mapR3 = (orig, cb) => {        
-    //console.log(arguments[1]);
     const mapLoop = (arr, i, orig) => {
-            //console.log("i", i);
-            return arr.length == 0            
-                ? []            
-                : [cb(arr[0], i, orig)].concat(                  
-                        mapLoop(arr.slice(1), i + 1, orig)                                      
-                );        
+        if (arr.length==0){
+            return [];        
+        } else {
+            const mapRest =mapLoop(arr.slice(1), i + 1, orig);
+            if (!(0 in arr)){
+                console.log("undefined detected");
+                return [,].concat(mapRest);
+            } else {
+                return [cb(arr[0], i, orig)].concat(mapRest);
+            }
         }
-
+    };
     return mapLoop(orig, 0, orig);
 };
 
-let aaa = [1, 2, 4, 5, 7];
-const senseless = (x, i, a) => {
-    //console.log(`${x} * 10 + ${i} + ${a}[${i}] / 10`);
-    console.log(a);
+const filterR = (orig, cb) => {        
+    const filterLoop = (arr, i, orig) => {
+        if (arr.length==0){
+            return [];        
+        } else {
+            const filterRest = filterLoop(arr.slice(1), i + 1, orig);
+            if (!(0 in arr)){
+                console.log("undefined detected");
+                return filterRest;
+            } else if (cb(arr[0], i, orig)) {
+                return [arr[0]].concat(filterRest);
+            } else {
+                return filterRest;
+            }
+        }
+    };
+    return filterLoop(orig, 0, orig);
+};
+
+const reduceR = (orig, cb, init) =>{
+    let accum = init;
+    const reduceLoop = (arr, i, accum, orig2) => {
+        return arr.length == 0
+            ? accum
+            : reduceLoop (
+                arr.slice(1),
+                i + 1,
+                !(0 in arr) ? accum : cb(accum, arr[0], i, orig2),
+                orig2
+            );
+    }
+
+    return reduceLoop(orig, 0, accum, orig);
+}
+
+const findR = (orig, cb) => {
+
+    const findLoop = (arr, i, orig2) => {
+        return arr.length == 0
+            ? undefined
+            : cb(arr[0], i, orig2) ? arr[0] : findLoop(arr.slice(1), i+1, orig2)
+    }
+
+    return findLoop(orig, 0, orig);
+}
+
+let aaa = [1, 12, , , 5, 22, 9, 60];
+const isOdd = (x, i, a) => {
+    console.log(x, i, a);
+    return x % 2
+};
+const senseless = (x, i, a) => {    
+    console.log(x, i, a);
     return x * 10 + i + a[i] / 10;
 };
 //console.log(aaa.map(senseless));    // [10.1, 21.2, 42.4, 53.5, 74.7]
-console.log(mapR3(aaa, senseless)); // [10.1, 21.2, 42.4, 53.5, 74.7]
+//console.log(mapR3(aaa, senseless)); // [10.1, 21.2, 42.4, 53.5, 74.7]
 //console.log(mapR4(aaa, senseless)); // [10.1, 21.2, 42.4, 53.5, 74.7]
+//console.log(filterR(aaa, isOdd));
+
+let bbb = [1, 2, , 5, 7, 8, 10, 21, 40];
+// console.log(reduceR(
+//     bbb,
+//     (x, y, i, a) => {
+//         console.log(x, y, i, a);
+//         return x + y
+//     },
+//     0
+// ));
+
+const isTwentySomething = (x, i, a) => {
+    console.log(x, i, a);
+    return 20 <= x && x <= 29;
+}
+const isThirtySomething = (x, i, a) => {
+    console.log(x, i, a);
+    return 30 <= x && x <= 39;
+}
+const isGreaterThanFive = (x, i, a) => {
+    console.log(x, i, a);
+    return x > 5;
+}
+
+// console.log(findR(aaa, isTwentySomething));
+// console.log(findR(aaa, isThirtySomething));
+// console.log(findR(aaa, isGreaterThanFive));
+
+const pipelineR = (first, ...rest) => {
+    if (rest.length == 0) {
+        return first;
+    } else {
+        return (...args) => {
+            console.log(args);
+            return pipelineR(...rest)(first(...args))
+        };
+    }                 
+}
+
+const plus1 = x => {
+    return x + 1;
+}
+const by10 = x => {
+    return x * 10;
+}
+
+// console.log(
+//     pipelineR(
+//         by10,
+//         plus1,
+//         plus1,
+//         plus1,
+//         by10,
+//         plus1,
+//         by10,
+//         by10,
+//         plus1,
+//         plus1,
+//         plus1
+//     )(2)    
+// );
+
+const SIZE = 8;
+let places = Array(SIZE);
+let solutions = 0
+
+const checkPlace = (column, row) =>    
+        places        
+            .slice(0, column)        
+            .every((v, i) => v !== row && Math.abs(v - row) !== column - i);
+
+const finder = (column = 0) => {    
+    if (column === SIZE) {        
+        // all columns tried out?        
+        console.log(places.map(x => x + 1)); // print out solution        
+        solutions++; // count it            
+    } else {        
+        const testRowsInColumn = j => {            
+            if (j < SIZE) {                
+                if (checkPlace(column, j)) {                    
+                    places[column] = j;                    
+                    finder(column + 1);                
+                }                
+                testRowsInColumn(j + 1);            
+            }        
+        };        
+        testRowsInColumn(0);    
+    }
+};
+
+finder();
+
+console.log(`Solutions found: ${solutions}`);
