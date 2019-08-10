@@ -244,6 +244,43 @@ const finder = (column = 0) => {
     }
 };
 
-finder();
+//finder();
 
-console.log(`Solutions found: ${solutions}`);
+//console.log(`Solutions found: ${solutions}`);
+
+const fs = require("fs");
+
+const recursiveDir = path => {
+    console.log(path);
+    fs.readdirSync(path).forEach(entry =>{
+       if(entry.startsWith(".")) {
+           //skip it
+       } else {
+           const full = path + "/" + entry;
+           const stats = fs.lstatSync(full);
+           if (stats.isSymbolicLink()){
+               console.log("L ", full);
+           } else if (stats.isDirectory()){
+               console.log("D ", full);
+               recursiveDir(full);
+           } else {
+               console.log(" ", full);
+           }
+       }
+    });
+};
+
+//recursiveDir("C:\\Users\\laihi\\projects\\functionaljs\\src");
+
+function detectTCO(){
+    const outerStackLen = new Error().stack.length;
+    return (function inner(){
+        const innerStackLen = new Error().stack.length;
+        console.log(`${new Error().stack}`);
+        return innerStackLen <= outerStackLen;
+    })();
+}
+
+console.log(new Error().stack);
+console.log(detectTCO());
+
