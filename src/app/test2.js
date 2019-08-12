@@ -617,4 +617,7 @@ const add9 = (x) => {
 //console.log(tap(add9)(2));
 
 const tap2 = fn => x => (fn(x), x);
-console.log(tap2(add9)(2));
+//console.log(tap2(add9)(2));
+
+console.log(fib(9));
+

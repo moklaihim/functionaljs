@@ -281,6 +281,144 @@ function detectTCO(){
     })();
 }
 
-console.log(new Error().stack);
-console.log(detectTCO());
+// console.log(new Error().stack);
+// console.log(detectTCO());
 
+function justLoop(n){
+    console.log(n);
+    n && justLoop(n-1);
+}
+
+//console.log(justLoop(15000));
+
+function factC(n, cont){
+    console.log("n = ", n);
+    if (n===0){
+        console.log("returning ", cont);
+        return cont(1);
+    } else {
+        return factC(n-1, x=>{
+            console.log("x inner = ", x, `${n} * ${x}`);
+
+            return cont(n*x);
+        });
+    }
+}
+
+// console.log(factC(7, x=>{
+//     console.log("x first = ", x, `${x}`);    
+//     return x})
+// );
+
+const fibC = (n, cont) =>{
+    if (n <= 1) {
+        return cont(n);
+    } else {
+        return fibC(n - 2, p=>{
+            return fibC(n - 1, q=> {
+                return cont (p + q);
+            });
+        });
+    }
+}
+
+//console.log( fibC( 6, x=> x ) );
+
+var traverseDom3C = (node, depth = 0, cont = () => {}) => {    
+    console.log(`${"| ".repeat(depth)}<${node.nodeName.toLowerCase()}>`);        
+    const traverseChildren = (children, i = 0) => {        
+        if (i < children.length) {            
+            return traverseDom3C(children[i], depth + 1, ()=>{
+                return traverseChildren(children, i + 1)
+            });            
+        }        
+        return cont();    
+    };        
+    return traverseChildren(Array.from(node.children));
+};
+
+// console.log(traverseDom3C({
+//     nodeName: "Main",
+//     children: [
+//         {
+//             nodeName: "Child1",
+//             children: [
+//                 {
+//                     nodeName: "SubChild1",
+//                     children: {}
+//                 },
+//                 {
+//                     nodeName: "SubChild2",
+//                     children: {}
+//                 },
+//                 {
+//                     nodeName: "SubChild3",
+//                     children: {}
+//                 }
+//             ]
+//         },
+//         {
+//             nodeName: "Child2",
+//             children: {}
+//         },
+//         {
+//             nodeName: "Child3",
+//             children: {}
+//         }
+//     ]
+// }));
+
+const trampoline = (fn) => {
+    while (typeof fn === "function"){
+        fn = fn();
+    }
+
+    return fn;
+};
+
+const sumAllC = (n, cont) => {
+    console.log("n = ", n);
+    if (n === 0){
+        return cont(0)
+    } else {
+        return sumAllC(n-1, v=>{
+            console.log(`${n} + ${v}`);
+            return cont(n+v);
+        });
+    }
+}
+
+const sumAllCT = n => {
+    const sumAllT = (n, cont) => {
+        //console.log("n = ", n);
+        if (n === 0){
+            return () => cont(0);
+        } else {
+            return () => sumAllT(n-1, v=> () => {
+                return cont(n+v);
+            });
+        }
+    };
+
+    //return sumAllT(n, console.log)()()()()();
+    //return trampoline(sumAllT(n, x=>x));
+    console.log("invoking...");
+    return trampoline(sumAllT(n, console.log));
+};
+
+const sumAll3 = n => {    
+    const sumAllT = (n, cont) =>        
+        n === 0            
+            ? () => cont(0)            
+            : () => sumAllT(n - 1, v => () => cont(v + n));        
+        return trampoline(sumAllT(n, x => x));
+};
+
+//console.log(sumAll3(5));
+//console.log(sumAllCT(5));
+
+sumAllCT(50000);
+
+// console.log(sumAllC(5, a=>{
+//     console.log("test", a);
+// }));

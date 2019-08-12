@@ -1,2 +1,1 @@
-Tail call optimization
-I'm using Chrome at my Linux laptop and I added a console.log() statement to show Error().stack. You can see that both stack entries (for inner() and detectTCO()) are live, so there's no TCO:
+Using recursion questions...
