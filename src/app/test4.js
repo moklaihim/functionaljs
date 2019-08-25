@@ -575,3 +575,64 @@ const deepFreeze = obj => {
     }
     return obj;
 };
+
+const getByPath = (arr, obj) => {
+    if (arr.length===0){
+        return undefined;
+    } else if(arr.length===1){
+        if (obj[arr[0]]){
+            return deepCopy(obj[arr[0]]);
+        } else {
+            return undefined;
+        }
+    } else {
+        if (obj[arr[0]]){
+            return getByPath(arr.slice(1), obj[arr[0]]);
+        }
+    }
+}
+
+const setByPath = (arr, value, obj) => {
+    if (!(arr[0] in obj)){        
+        if (arr.length === 1){
+            obj[arr[0]] = null;
+        } else {
+            obj[arr[0]] = {};
+        }                
+    }
+
+    if (arr.length > 1){        
+        return setByPath(arr.slice(1), value, obj[arr[0]]);
+    } else {
+        obj[arr[0]] = value;
+        return obj;
+    }
+}
+
+const updateObject = (arr, obj, value) => {
+    let newObj = deepCopy(obj);
+    //console.log(newObj);
+    setByPath(arr, value, newObj);
+    return deepFreeze(newObj);
+}
+
+let myObj3 = {    d: 22,    m: 9,    o: {c: "MVD", i: "UY", f: {a: 56}}};
+deepFreeze(myObj3);
+
+let new1 = updateObject(["m"], myObj3, "sep");
+console.log(new1);
+// {d: 22, m: "sep", o: {c: "MVD", i: "UY", f: {a: 56}}};
+
+let new2 = updateObject(["b"], myObj3, 220960);
+console.log(new2);
+// {d: 22, m: 9, o: {c: "MVD", i: "UY", f: {a: 56}}, b: 220960};
+
+let new3 = updateObject(["o", "f", "a"], myObj3, 9999);
+console.log(new3);
+// {d: 22, m: 9, o: {c: "MVD", i: "UY", f: {a: 9999}}};
+
+let new4 = updateObject(["o", "f", "j", "k"], myObj3, "deep");
+console.log(new4);
+// {d: 22, m: 9, o: {c: "MVD", i: "UY", f: {a: 56, j: {k: "deep"}}}};
+
+//console.log(getByPath(["o","f"], new4));
