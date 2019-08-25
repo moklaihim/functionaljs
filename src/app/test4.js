@@ -417,8 +417,161 @@ const sumAll3 = n => {
 //console.log(sumAll3(5));
 //console.log(sumAllCT(5));
 
-sumAllCT(50000);
+// sumAllCT(50000);
 
 // console.log(sumAllC(5, a=>{
 //     console.log("test", a);
 // }));
+
+const getISODateAndTime = () => new Date();
+const isoDateAndTime = getISODateAndTime();
+
+// setInterval(()=>{
+//         console.log(isoDateAndTime)
+//     }
+// , 500);
+//console.log(isoDateAndTime);
+
+const reverse = (str) => {
+    
+    const doReverse = (rStr)=>{        
+        if (rStr.length===0){
+            return "";
+        } else {                        
+            return doReverse(rStr.slice(1))+rStr[0];            
+        }    
+    }
+    
+    return doReverse(str);
+}
+
+// console.log(reverse("abcdefg"));
+
+const ladder = (steps) => {
+    console.log(`steps = ${steps}`);
+    if (steps===0){
+        return 0;
+    } else if (steps===1) {
+        return 1;
+    } else {
+        return ladder(steps-2) + ladder(steps-1);
+    }
+};
+
+//console.log(ladder(8));
+
+const longestSubSequence = (str1, str2) => {
+    
+    const process = (sstr1, sstr2) =>{
+        console.log(`${sstr1} ${sstr2}`);
+        if (sstr1===0 || sstr2===0){
+            return "";
+        } else if (sstr1[0] === sstr2[0]){
+            return longestSubSequence(sstr1.slice[1], sstr2) + sstr1[0];
+        } else {
+            return longestSubSequence(sstr1.slice[1], sstr2);
+        }
+    }
+    
+    return process(str1, str2);
+}
+
+// console.log(longestSubSequence("abcdefg", "efg"));
+
+const recurPrintAarry = (arr) => {
+        if (arr.length === 0){
+        return;
+    } else {
+        console.log(arr[0]);
+        return recurPrintAarry(arr.slice(1));
+    }
+
+}
+
+//recurPrintAarry([1,2,3,4,5,6,7,8,9]);
+
+const isPalindrome = (str) => {
+    if (str.length===1 || str.length===0){
+        return true;
+    } else if (str.charAt(0) === str.charAt(str.length-1)) {        
+        return isPalindrome(str.slice(1, str.length-1));
+    } else {
+        return false;
+    }
+}
+
+// console.log(isPalindrome("21"));
+
+const powerR = (a, b) => {
+    if (b===1){
+        return a;
+    } else {
+        return a * powerR(a, b-1);
+    }
+}
+
+// console.log(powerR(4,3));
+
+const map = (arr, fn, idx) => {
+    if (idx === arr.length){
+        return arr;
+    } else {
+        arr[idx] = fn(arr[idx]);
+        return map(arr, fn, idx+1);
+    }
+}
+
+// console.log(map([1,2,3], x=>x*2, 0));
+
+function BinaryNodeTree(val){
+    this.value = val;
+    this.left = null;
+    this.right = null;
+}
+
+BinaryNodeTree.prototype.add = function (tobeAddedValue) {
+    console.log("adding node", tobeAddedValue, this.value);
+    if (this.value < tobeAddedValue && this.right){
+        return this.right.add(tobeAddedValue);
+    } else if (this.value < tobeAddedValue && this.right===null){
+        return this.right = new BinaryNodeTree(tobeAddedValue);
+    } else if (this.value > tobeAddedValue && this.left){
+        return this.left.add(tobeAddedValue);
+    } else if (this.value > tobeAddedValue && this.left===null){
+        return this.left = new BinaryNodeTree(tobeAddedValue);
+    }
+}
+
+// let root = new BinaryNodeTree(7);
+// root.add(5);
+// root.add(8);
+// root.add(10);
+// root.add(2);
+// root.add(1);
+// root.add(9);
+// root.add(13);
+// root.add(8);
+//console.log(root);
+
+const deepCopy = obj => {
+    let aux = obj;
+
+    if (obj && typeof obj === "object"){
+        aux = new obj.constructor();
+        Object.getOwnPropertyNames(obj).forEach(prop=>{
+            aux[prop] = deepCopy(obj[prop]);
+        });
+    }
+
+    return aux;
+};
+
+const deepFreeze = obj => {
+    if (obj && typeof obj === "object" && !Object.isFrozen(obj)){
+        Object.freeze(obj);
+        Object.getOwnPropertyNames(obj).forEach(prop=>{
+            deepFreeze(obj[prop]);
+        });
+    }
+    return obj;
+};
